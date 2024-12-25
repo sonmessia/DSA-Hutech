@@ -31,21 +31,20 @@ int main()
             finishTimeA += p.first / a;
         }
     }
-    int t = 0;
+    int timeRemaining = 0;
     for (auto &p : mp)
     {
         if (!p.second)
         {
-            t += p.first;
+            timeRemaining += p.first;
             p.second = true;
         }
     }
-    t = ceil((double)t / (a+b));
-    cout << t << " " << finishTimeA << " "<< finishTimeB << endl;
-    if (finishTimeA + t < finishTimeB)
-        finishTimeA += t;
+    if (timeRemaining > 0)
+    {
+        
+    }
     else
-        finishTimeB += t;
-    cout << max(finishTimeA, finishTimeB) << endl;
+        cout << max(finishTimeA, finishTimeB) << endl;
     return 0;
 }
