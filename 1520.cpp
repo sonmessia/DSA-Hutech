@@ -8,43 +8,34 @@ int main()
     cin >> n >> a >> b;
     if (a > b)
         swap(a, b);
-    map<int, bool> mp;
+    map<int, bool, greater<int>> mp;
     for (int i = 0; i < n; i++)
     {
         int x;
         cin >> x;
         mp[x] = false;
     }
+
     for (auto &p : mp)
     {
-        if (p.first % b == 0)
+        if (p.first % a == 0 && p.first % b == 0)
         {
-            p.second = true;
-            finishTimeB += p.first / b;
+            if (finishTimeA <= finishTimeB)
+            {
+                finishTimeA += p.first / a;
+                p.second = true;
+            }
+            else
+            {
+                finishTimeB += p.first / b;
+                p.second = false;
+            }
         }
     }
-    for (auto &p : mp)
+    for (auto& p : mp)
     {
-        if (p.first % a == 0 && !p.second)
-        {
-            p.second = true;
-            finishTimeA += p.first / a;
-        }
+        cout << p.first << " " << p.second << endl;
     }
-    int timeRemaining = 0;
-    for (auto &p : mp)
-    {
-        if (!p.second)
-        {
-            timeRemaining += p.first;
-            p.second = true;
-        }
-    }
-    if (timeRemaining > 0)
-    {
-        
-    }
-    else
-        cout << max(finishTimeA, finishTimeB) << endl;
+    cout << finishTimeA << " " << finishTimeB << endl;
     return 0;
 }
