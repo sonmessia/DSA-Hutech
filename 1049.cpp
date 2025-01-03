@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+const int maxn = 200005;
 vector<pair<int, int>> tree;
 int n, q;
 void build(const vector<int> &arr, int node, int start, int end)
@@ -10,8 +11,8 @@ void build(const vector<int> &arr, int node, int start, int end)
     else
     {
         int mid = (start + end) >> 1;
-        int left = 2 * node + 1;
-        int right = 2 * node + 2;
+        int left = 2 * node;
+        int right = 2 * node + 1;
         build(arr, left, start, mid);
         build(arr, right, mid + 1, end);
 
@@ -25,37 +26,36 @@ void build(const vector<int> &arr, int node, int start, int end)
 
 pair<int, int> query(int node, int start, int end, int l, int r)
 {
-    if (r < start || l > end)
-        return {INT_MAX, -1};
+    if (r < start || end < l)
+        return {INT_MAX, INT_MAX};
     if (l <= start && end <= r)
         return tree[node];
+    
     int mid = (start + end) >> 1;
-    int left = 2 * node + 1;
-    int right = 2 * node + 2;
-
-    pair<int, int> leftResult = query(left, start, mid, l, r);
-    pair<int, int> rightResult = query(right, mid + 1, end, l, r);
+    int left = 2 * node;
+    int right = 2 * node + 1;
+    auto leftResult = query(left, start, mid, l, r);
+    auto rightResult = query(right, mid + 1, end, l, r);
 
     if (leftResult.first < rightResult.first ||
         (leftResult.first == rightResult.first && leftResult.second < rightResult.second))
         return leftResult;
-    else
-        return rightResult;
+    return rightResult;
 }
 
-void update(int node, int start, int end, int idx, int value)
+void update(int node, int start, int end, int pos, int value)
 {
     if (start == end)
-        tree[node] = {value, idx};
+        tree[node] = {tree[node].first + value, pos};
     else
     {
         int mid = (start + end) >> 1;
-        int left = 2 * node + 1;
+        int left = 2 * node;
         int right = 2 * node + 1;
-        if (idx <= mid)
-            update(left, start, mid, idx, value);
+        if (pos <= mid)
+            update(left, start, mid, pos, value);
         else
-            update(right, mid + 1, end, idx, value);
+            update(right, mid + 1, end, pos, value);
 
         if (tree[left].first < tree[right].first ||
             (tree[left].first == tree[right].first && tree[left].second < tree[right].second))
@@ -72,8 +72,8 @@ void collectArray(int node, int start, int end, vector<int>& result)
     else
     {
         int mid = (start + end) >> 1;
-        int left = 2 * node + 1;
-        int right = 2 * node + 2;
+        int left = 2 * node;
+        int right = 2 * node + 1;
         collectArray(left, start, mid, result);
         collectArray(right, mid + 1, end, result);
     }
@@ -82,24 +82,24 @@ void collectArray(int node, int start, int end, vector<int>& result)
 vector<int> getArray()
 {
     vector<int> result(n);
-    collectArray(0,0,n-1,result);
+    collectArray(1,0,n-1,result);
     return result;
 }
 int main()
 {
     cin >> n >> q;
-    tree.resize(4*n);
+    tree.resize(4*maxn);
     vector<int> arr(n);
-    build(arr, 0, 0, n-1);
+    build(arr, 1, 0, n-1);
     while (q--)
     {
         long r, p;
         cin >> r >> p;
         while (p--)
         {
-            auto result = query(0,0,n-1,0,r);
+            auto result = query(0,0,n-1,0,r-1);
             cout << result.first << ' ' <<result.second<<'\n';
-            update(0,0,n-1, result.first, result.second + 1);
+            update(1,0,n-1, result.first - 1, 1);
         }
     }
 
