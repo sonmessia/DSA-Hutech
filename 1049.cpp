@@ -33,7 +33,7 @@ pair<int, int> query(int node, int start, int end, int l, int r)
         return {INT_MAX, INT_MAX};
     if (l <= start && end <= r)
         return tree[node];
-    
+
     int mid = (start + end) >> 1;
     int left = 2 * node;
     int right = 2 * node + 1;
@@ -68,7 +68,7 @@ void update(int node, int start, int end, int pos, int value)
     }
 }
 
-void collectArray(int node, int start, int end, vector<int>& result)
+void collectArray(int node, int start, int end, vector<int> &result)
 {
     if (start == end)
         result[start] = tree[node].first;
@@ -85,29 +85,35 @@ void collectArray(int node, int start, int end, vector<int>& result)
 vector<int> getArray()
 {
     vector<int> result(n);
-    collectArray(1,0,n-1,result);
+    collectArray(1, 0, n - 1, result);
     return result;
 }
 int main()
 {
     cin >> n >> q;
-    tree.resize(4*maxn);
+    tree.resize(4 * maxn);
     vector<int> arr(n);
-    build(arr, 1, 0, n-1);
+    build(arr, 1, 0, n - 1);
     while (q--)
     {
         long r, p;
         cin >> r >> p;
+        if (p / r > 0)
+        {
+            for (int i = 0; i < r; i++)
+                update(1, 0, n - 1, i, p / r);
+            p %= r;
+        }
         while (p--)
         {
-            auto result = query(1, 0, n-1, 0, r-1);
-            update(1, 0, n-1, result.second, 1);
+            auto result = query(1, 0, n - 1, 0, r - 1);
+            update(1, 0, n - 1, result.second, 1);
         }
     }
 
     arr = getArray();
-    
-    for (const int& i : arr)
+
+    for (const int &i : arr)
         cout << i << ' ';
     return 0;
 }
