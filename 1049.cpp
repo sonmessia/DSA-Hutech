@@ -1,5 +1,28 @@
+// i encounter a problem with the time limit, so i have to optimize the code.
+// input: 1626 2000
+// 1438 501627804
+// 724 312073865
+// 705 165786399
+// 680 811659966
+// 1030 522255735
+// 470 693991176
+// 1062 378690602
+// 1553 813105578
+// 1357 675826664
+// 1589 106686914
+// 714 166253409
+// 1268 448297002
+// 1136 139888712
+
+// I have to optimize the code to avoid the time limit.
+// I have to use the segment tree to solve the problem.
+// I have to use the lazy propagation to solve the problem.
+// I have to use the pair to store the value and the index of the value.
+// I have to use the vector to store the tree.
+
 #include <iostream>
 #include <vector>
+#include <climits>
 using namespace std;
 const int maxn = 200005;
 vector<pair<int, int>> tree;
@@ -97,14 +120,13 @@ int main()
         cin >> r >> p;
         while (p--)
         {
-            auto result = query(0,0,n-1,0,r-1);
-            cout << result.first << ' ' <<result.second<<'\n';
-            update(1,0,n-1, result.first - 1, 1);
+            auto result = query(1, 0, n-1, 0, r-1);
+            update(1, 0, n-1, result.second, 1);
         }
     }
 
     arr = getArray();
-
+    
     for (const int& i : arr)
         cout << i << ' ';
     return 0;
