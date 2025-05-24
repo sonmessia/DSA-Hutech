@@ -32,8 +32,7 @@ def smallest_perimeter(points, K):
         min_perimeter = min(min_perimeter, perimeter)
     return min_perimeter
 
-N = int(input())
-K = int(input())
+N, K = map(int, input().split())
 points = [tuple(map(int, input().split())) for _ in range(N)]
 
 result = smallest_perimeter(points, K)
